@@ -15,17 +15,17 @@ MonoBehaviour:
   waves:
   - prefabEnemy: {fileID: 2081532115668943053, guid: 9c29a07279b374e2aaf7a015da15211e, type: 3}
     offsetXFromLastEnemy: 0
-    nextEnemySpawnDelay: 1.5
+    nextEnemySpawnDelay: 1.75
   - prefabEnemy: {fileID: 2081532115668943053, guid: 9c29a07279b374e2aaf7a015da15211e, type: 3}
     offsetXFromLastEnemy: 2
-    nextEnemySpawnDelay: 1.5
+    nextEnemySpawnDelay: 1.75
   - prefabEnemy: {fileID: 2081532115668943053, guid: 9c29a07279b374e2aaf7a015da15211e, type: 3}
     offsetXFromLastEnemy: -4
-    nextEnemySpawnDelay: 1.5
+    nextEnemySpawnDelay: 1.75
   - prefabEnemy: {fileID: 2081532115668943053, guid: 9c29a07279b374e2aaf7a015da15211e, type: 3}
     offsetXFromLastEnemy: 4
     nextEnemySpawnDelay: 2
   - prefabEnemy: {fileID: 3319825933102930435, guid: ac8336763c0c047aca9a469c10d3f448, type: 3}
     offsetXFromLastEnemy: 0
-    nextEnemySpawnDelay: 2
-  nextWaveDelay: 2
+    nextEnemySpawnDelay: 0
+  nextWaveDelay: 4

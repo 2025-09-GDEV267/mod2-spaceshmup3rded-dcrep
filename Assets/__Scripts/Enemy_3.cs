@@ -22,6 +22,7 @@ public class Enemy_3 : Enemy
     // Again, Start works well because it is not used in the Enemy superclass
     void Start()
     {
+        health = 5;
         points = new Vector3[3]; // Initialize points
 
         // The start position has already been set by Main.SpawnEnemy()

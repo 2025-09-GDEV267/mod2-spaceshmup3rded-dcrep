@@ -15,6 +15,7 @@ public class Hero : MonoBehaviour
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
     public Weapon[] weapons;
+    private int loadedWeapons = 1;
 
     [Header("Dynamic")]
     [Range(0, 4)]
@@ -107,6 +108,7 @@ public class Hero : MonoBehaviour
         if (enemy != null)
         {  // If the shield was triggered by an enemy
             shieldLevel--;        // Decrease the level of the shield by 1
+            RemoveWeapon();    // Remove the last weapon
             Destroy(go);          // … and Destroy the enemy                  // f
         }
         else if (pUp != null)
@@ -150,6 +152,21 @@ public class Hero : MonoBehaviour
         return (null);
     }
 
+    void RemoveWeapon()
+    {
+        if (weapons.Length == 0) return;
+        if (loadedWeapons == 1) return;
+        for (int i = weapons.Length - 1; i >= 0; i--)
+        {
+            if (weapons[i].type != eWeaponType.none)
+            {
+                weapons[i].SetType(eWeaponType.none);
+                loadedWeapons--;
+                return;
+            }
+        }
+    }
+
     /// <summary>
     /// Sets the type of all Weapon slots to none
     /// </summary>
@@ -171,18 +188,21 @@ public class Hero : MonoBehaviour
                 break;
 
             default:                                                             // b
-                if (pUp.type == weapons[0].type)
+                //if (pUp.type == weapons[0].type)
+                if (true)
                 { // If it is the same type     // c
                     Weapon weap = GetEmptyWeaponSlot();
                     if (weap != null)
                     {
                         // Set it to pUp.type
                         weap.SetType(pUp.type);
+                        loadedWeapons++;
                     }
                 }
                 else
                 { // If this is a different weapon type                   // d
                     ClearWeapons();
+                    loadedWeapons = 1;
                     weapons[0].SetType(pUp.type);
                 }
                 break;

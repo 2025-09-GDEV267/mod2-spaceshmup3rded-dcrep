@@ -26,6 +26,7 @@ public class Enemy_2 : Enemy
 
     void Start()
     {
+        health = 5;
         // Pick any point on the left side of the screen
         p0 = Vector3.zero;                                                    // c
         p0.x = -bndCheck.camWidth - bndCheck.radius;
