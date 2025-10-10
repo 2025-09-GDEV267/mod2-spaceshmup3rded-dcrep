@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccf6f26cbc7c7a428c3b8b200030c2c, type: 3}
+  m_Name: WaveMess
+  m_EditorClassIdentifier: 
+  waves:
+  - prefabEnemy: {fileID: 9185519998980853174, guid: 486b535a9aae8446f9346d286631b31d, type: 3}
+    offsetXFromLastEnemy: 0
+    nextEnemySpawnDelay: 0
+  - prefabEnemy: {fileID: 3319825933102930435, guid: ac8336763c0c047aca9a469c10d3f448, type: 3}
+    offsetXFromLastEnemy: 3
+    nextEnemySpawnDelay: 1
+  - prefabEnemy: {fileID: 3319825933102930435, guid: ac8336763c0c047aca9a469c10d3f448, type: 3}
+    offsetXFromLastEnemy: -6
+    nextEnemySpawnDelay: 1
+  - prefabEnemy: {fileID: 4070209521177695457, guid: 10ae278da906f451594d7989d76b6d15, type: 3}
+    offsetXFromLastEnemy: 3
+    nextEnemySpawnDelay: 0.25
+  - prefabEnemy: {fileID: 4070209521177695457, guid: 10ae278da906f451594d7989d76b6d15, type: 3}
+    offsetXFromLastEnemy: 3
+    nextEnemySpawnDelay: 1
+  - prefabEnemy: {fileID: 6217192625371338093, guid: 8b3b585cc9dbb43ff97ab0579e85fd71, type: 3}
+    offsetXFromLastEnemy: 3
+    nextEnemySpawnDelay: 1
+  nextWaveDelay: 15
