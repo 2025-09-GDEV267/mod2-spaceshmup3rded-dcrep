@@ -1,9 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;   // Enables the loading & reloading of scenes
 
 [RequireComponent(typeof(BoundsCheck))]
+
+[System.Serializable]
+public class EnemyWave
+{
+    [System.Serializable]
+    public class WaveData
+    {
+        public string enemyName;
+        public int offsetXFromLastEnemy = 0;
+        public float nextEnemySpawnDelay = 0.5f;
+    }
+    public List<WaveData> waves = new();
+    public float nextWaveDelay = 2f;
+}
+[System.Serializable]
+public class EnemyWaves
+{
+    public List<EnemyWave> enemies = new();
+}
+
+
 public class Main : MonoBehaviour
 {
     static private Main S;                        // A private singleton for Main
@@ -13,18 +35,24 @@ public class Main : MonoBehaviour
     [Header("Inscribed")]
     public bool spawnEnemies = true;
 
-    public WaveScriptableObject[] enemyWaves;
-    private int currentWave = 0;
+    public WaveScriptableObject[] enemyWavesSO;
+    private int currentWaveIndex = 0;
     private int currentEnemyInWave = 0;
     private Vector3 waveStartPos;
 
-    public GameObject[] prefabEnemies;               // Array of Enemy prefabs
+    public GameObject[] prefabEnemies;
+    public Dictionary<string, GameObject> prefabEnemyLookup;
+    public EnemyWaves enemyWaves;
+
+    public TextAsset enemyWaveJSONFile;
+
+    public GameObject[] prefabRandomizedEnemies;               // Array of Enemy prefabs
     public float enemySpawnPerSecond = 0.5f;  // # Enemies spawned/second
     public float enemyInsetDefault = 1.5f;    // Inset from the sides
     public float gameRestartDelay = 2.0f;
     public GameObject prefabPowerUp;
     public WeaponDefinition[] weaponDefinitions;
-    public eWeaponType[] powerUpFrequency = new eWeaponType[] {        
+    public eWeaponType[] powerUpFrequency = new eWeaponType[] {
                                      eWeaponType.blaster, eWeaponType.blaster,
                                      eWeaponType.spread,  eWeaponType.shield };
     private BoundsCheck bndCheck;
@@ -48,22 +76,33 @@ public class Main : MonoBehaviour
             WEAP_DICT[def.type] = def;
         }
 
+        // Load waves from json
+        enemyWaves = JsonUtility.FromJson<EnemyWaves>(enemyWaveJSONFile.text);
+
+        //prefabEnemies.ToDictionary<int, GameObject>(prefabEnemyLookup)
+        prefabEnemyLookup = new();
+        
+        for (int i = 0; i < prefabEnemies.Length; i++)
+        {
+            prefabEnemyLookup.Add("Enemy_" + i, prefabEnemies[i]);
+        }
     }
 
     void Start()
     {
-        SpawnWave(1f);
+        //SpawnWaveSO(1f);
+        SpawnWaveJSON(1f);
     }
 
-    public void SpawnWave(float waveBeginDelay)
+    public void SpawnWaveSO(float waveBeginDelay)
     {
-        if (currentWave >= enemyWaves.Length)
+        if (currentWaveIndex >= enemyWavesSO.Length)
         {
-            if (enemyWaves.Length < 1)
+            if (enemyWavesSO.Length < 1)
                 return;
-            currentWave = 0;
+            currentWaveIndex = 0;
         }
-        Debug.Log("Spawning Wave #" + currentWave + 1);
+        Debug.Log("Spawning Wave #" + currentWaveIndex + 1);
         currentEnemyInWave = 0;
 
         // Set the initial position for the spawning Enemies
@@ -75,12 +114,37 @@ public class Main : MonoBehaviour
 
         waveStartPos = pos;
 
-        Invoke(nameof(WaveNextEnemy), waveBeginDelay);        
+        Invoke(nameof(WaveNextEnemySO), waveBeginDelay);
     }
 
-    private void WaveNextEnemy()
+    public void SpawnWaveJSON(float waveBeginDelay)
     {
-        GameObject go = Instantiate<GameObject>(enemyWaves[currentWave].waves[currentEnemyInWave].prefabEnemy);
+        if (currentWaveIndex >= enemyWaves.enemies.Count)
+        {
+            if (enemyWaves.enemies.Count < 1)
+                return;
+            currentWaveIndex = 0;
+        }
+        Debug.Log("Spawning Wave #" + currentWaveIndex + 1);        
+        currentEnemyInWave = 0;
+        //EnemyWave currentWave = enemyWaves.enemies[currentWaveIndex];
+        //Debug.Log("Dictionary lookup: " + prefabEnemyLookup[currentWave.waves[0].enemyName].name);
+
+        // Set the initial position for the spawning Enemies
+        Vector3 pos = Vector3.zero;
+        float xMin = -bndCheck.camWidth + 6;
+        float xMax = bndCheck.camWidth - 6;
+        pos.x = Random.Range(xMin, xMax);
+        pos.y = bndCheck.camHeight;
+
+        waveStartPos = pos;
+
+        Invoke(nameof(WaveNextEnemyJSON), waveBeginDelay);
+    }
+
+    private void WaveNextEnemySO()
+    {
+        GameObject go = Instantiate<GameObject>(enemyWavesSO[currentWaveIndex].waves[currentEnemyInWave].prefabEnemy);
 
         // Position the Enemy above the screen with a random x position
         float enemyInset = enemyInsetDefault;                                // d
@@ -88,20 +152,48 @@ public class Main : MonoBehaviour
         //{                        // e
         //    enemyInset = Mathf.Abs(go.GetComponent<BoundsCheck>().radius);
         //}
-        waveStartPos.x += enemyWaves[currentWave].waves[currentEnemyInWave].offsetXFromLastEnemy;
+        waveStartPos.x += enemyWavesSO[currentWaveIndex].waves[currentEnemyInWave].offsetXFromLastEnemy;
         go.transform.position = waveStartPos;
 
-        float nextEnemySpawnDelay = enemyWaves[currentWave].waves[currentEnemyInWave].nextEnemySpawnDelay;
+        float nextEnemySpawnDelay = enemyWavesSO[currentWaveIndex].waves[currentEnemyInWave].nextEnemySpawnDelay;
         currentEnemyInWave++;
-        if (currentEnemyInWave >= enemyWaves[currentWave].waves.Length)
+        if (currentEnemyInWave >= enemyWavesSO[currentWaveIndex].waves.Length)
         {
-            currentWave++;
+            currentWaveIndex++;
             // timeBetweenWaves
-            SpawnWave(enemyWaves[currentWave - 1].nextWaveDelay);
+            SpawnWaveSO(enemyWavesSO[currentWaveIndex - 1].nextWaveDelay);
             return;
         }
         //else
-        Invoke(nameof(WaveNextEnemy), nextEnemySpawnDelay);
+        Invoke(nameof(WaveNextEnemySO), nextEnemySpawnDelay);
+    }
+    //...
+    private void WaveNextEnemyJSON()
+    {
+        //GameObject go = Instantiate<GameObject>(enemyWavesSO[currentWaveIndex].waves[currentEnemyInWave].prefabEnemy);
+        GameObject prefab = prefabEnemyLookup[enemyWaves.enemies[currentWaveIndex].waves[currentEnemyInWave].enemyName];
+        GameObject go = Instantiate<GameObject>(prefab);
+
+        // Position the Enemy above the screen with a random x position
+        float enemyInset = enemyInsetDefault;                                // d
+        //if (go.GetComponent<BoundsCheck>() != null)
+        //{                        // e
+        //    enemyInset = Mathf.Abs(go.GetComponent<BoundsCheck>().radius);
+        //}
+        waveStartPos.x += enemyWaves.enemies[currentWaveIndex].waves[currentEnemyInWave].offsetXFromLastEnemy;
+        go.transform.position = waveStartPos;
+
+        float nextEnemySpawnDelay = enemyWaves.enemies[currentWaveIndex].waves[currentEnemyInWave].nextEnemySpawnDelay;
+        currentEnemyInWave++;
+        if (currentEnemyInWave >= enemyWaves.enemies[currentWaveIndex].waves.Count)
+        {
+            currentWaveIndex++;
+            // timeBetweenWaves
+            SpawnWaveJSON(enemyWaves.enemies[currentWaveIndex - 1].nextWaveDelay);
+            return;
+        }
+        //else
+        Invoke(nameof(WaveNextEnemyJSON), nextEnemySpawnDelay);
     }
 
     public void SpawnEnemy()
@@ -114,8 +206,8 @@ public class Main : MonoBehaviour
         }
 
         // Pick a random Enemy prefab to instantiate
-        int ndx = Random.Range(0, prefabEnemies.Length);                     // b
-        GameObject go = Instantiate<GameObject>(prefabEnemies[ndx]);     // c
+        int ndx = Random.Range(0, prefabRandomizedEnemies.Length);                     // b
+        GameObject go = Instantiate<GameObject>(prefabRandomizedEnemies[ndx]);     // c
 
         // Position the Enemy above the screen with a random x position
         float enemyInset = enemyInsetDefault;                                // d

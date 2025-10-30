@@ -1,0 +1,109 @@
+{
+    "enemies": [
+        {
+            "waves": [
+                {
+                    "enemyName" : "Enemy_0",
+                    "offsetXFromLastEnemy" : 0,
+                    "nextEnemySpawnDelay" : 1.75
+                },
+                {
+                    "enemyName" : "Enemy_0",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 1.75
+                },
+                {
+                    "enemyName" : "Enemy_0",
+                    "offsetXFromLastEnemy" : -4,
+                    "nextEnemySpawnDelay" : 1.75
+                },
+                {
+                    "enemyName" : "Enemy_0",
+                    "offsetXFromLastEnemy" : 4,
+                    "nextEnemySpawnDelay" : 2
+                },
+                {
+                    "enemyName" : "Enemy_1",
+                    "offsetXFromLastEnemy" : 0,
+                    "nextEnemySpawnDelay" : 0
+                }
+            ],
+            "nextWaveDelay" : 4
+        },
+        {
+            "waves": [
+                {
+                    "enemyName" : "Enemy_2",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 3
+                },
+                {
+                    "enemyName" : "Enemy_2",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 3
+                },
+                {
+                    "enemyName" : "Enemy_2",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 3
+                },
+                {
+                    "enemyName" : "Enemy_3",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 3
+                },
+                {
+                    "enemyName" : "Enemy_3",
+                    "offsetXFromLastEnemy" : 2,
+                    "nextEnemySpawnDelay" : 0
+                }
+            ],
+            "nextWaveDelay" : 4
+        },
+        {
+            "waves": [
+                {
+                    "enemyName" : "Enemy_4",
+                    "offsetXFromLastEnemy" : 0,
+                    "nextEnemySpawnDelay" : 0
+                }
+            ],
+            "nextWaveDelay" : 10
+        },
+        {
+            "waves": [
+                {
+                    "enemyName" : "Enemy_4",
+                    "offsetXFromLastEnemy" : 0,
+                    "nextEnemySpawnDelay" : 0
+                },
+                {
+                    "enemyName" : "Enemy_1",
+                    "offsetXFromLastEnemy" : 3,
+                    "nextEnemySpawnDelay" : 1
+                },
+                {
+                    "enemyName" : "Enemy_1",
+                    "offsetXFromLastEnemy" : -6,
+                    "nextEnemySpawnDelay" : 1
+                },
+                {
+                    "enemyName" : "Enemy_2",
+                    "offsetXFromLastEnemy" : 3,
+                    "nextEnemySpawnDelay" : 0.25
+                },
+                {
+                    "enemyName" : "Enemy_2",
+                    "offsetXFromLastEnemy" : 3,
+                    "nextEnemySpawnDelay" : 1
+                },
+                {
+                    "enemyName" : "Enemy_3",
+                    "offsetXFromLastEnemy" : 3,
+                    "nextEnemySpawnDelay" : 1
+                }
+            ],
+            "nextWaveDelay" : 15
+        }
+    ]
+}
